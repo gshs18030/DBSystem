@@ -74,18 +74,21 @@
   3. Freeze_account: UPDATE SET WHERE를 사용하여 계좌를 동결.
   4. Unfreeze_account: UPDATE SET WHERE를 사용하여 계좌를 활성화.
   5. List_freeze_deliq: SELECT FROM WHERE를 사용하여 동결/연체 목록 출력.
+    
 - User_query.py
   1. Create_user: INSERT INTO를 사용하여 고객 tuple을 생성.
   2. Get_user_by_id: SELECT FROM WHERE를 사용하여 고객 정보를 열람.
   3. Update_user_info: UPDATE SET WHERE를 사용하여 고객의 정보를 수정.
   4. Recalc_credit_for_user: SELECT FROM WHERE, UPDATE SET WHERE를 사용하여 고객의 신용 등급을 갱신. (연체 횟수가 2 이상이면 B, 4 이상이면 C로 단순화)
   5. Show_user_status_summary: SELECT FROM (JOIN ON) WHERE를 사용하여 고객의 계좌/카드/대출 정보를 한번에 열람.
+     
 - Account_query.py
   1. Create_account: INSERT INTO를 사용하여 계좌 tuple을 생성.
   2. Delete_account: DELETE FROM WHERE를 사용하여 계좌 tuple을 삭제. FK로 연관된 tuple들도 on delete cascade로 자동 삭제.
   3. Show_account_info: SELECT FROM WHERE를 사용하여 계좌 정보를 확인.
   4. List_accounts_by_user: SELECT FROM WHERE를 사용하여 고객의 계좌 목록을 나열.
   5. Change_account_status: UPDATE SET WHERE를 사용하여 계좌의 상태를 변경.
+     
 - Card_query.py
   1. Create_card: SELECT FROM (JOIN ON) WHERE, INSERT INTO를 사용하여 카드 tuple을 생성. 계좌 하나당 카드 하나만 생성 가능하며, 카드 번호는 계좌번호와 동일.
   2. Show_card_info: SELECT FROM JOIN ON WHERE를 사용하여 카드의 정보를 열람.
@@ -95,10 +98,12 @@
   6. Pay_card_bill: SELECT FROM (JOIN ON) WHERE, UPDATE SET WHERE를 사용하여 카드 청구를 납부. 계좌에 잔액이 부족하면 연체 처리.
   7. Change_card_status: UPDATE SET WHERE를 사용하여 카드 상태를 변경.
   8. Show_card_overdues: SELECT FROM JOIN ON WHERE를 사용하여 카드 연체 내역을 조회.
+     
 - Passbook_query.py
   1. Deposit: SELECT FROM WHERE, UPDATE SET WHERE, INSERT INTO를 사용하여 계좌에 입금을 하고 통장에 기록.
   2. Withdraw: SELECT FROM WHERE, UPDATE SET WHERE, INSERT INTO를 사용하여 계좌에서 출금을 하고 통장에 기록.
   3. Show_passbook_by_account: SELECT FROM WHERE ORDER BY를 사용하여 통장 거래 내역을 조회.
+     
 - Loan_query.py
   1. Create_loan: SELECT FROM WHERE, INSERT INTO를 사용하여 대출 tuple과 필요시 담보 tuple도 생성.
   2. Show_loan_info: SELECT FROM (JOIN ON) WHERE를 사용하여 해당 대출에 대한 정보를 열람.
@@ -106,6 +111,26 @@
   4. Pay_loan_repay: SELECT FROM WHERE, UPDATE SET WHEN THEN ELSE WHERE를 사용하여 상환 일정에 상환 진행.
   5. Show_loan_overdues: SELECT FROM JOIN ON WHERE를 사용하여 대출 연체 내역을 조회.
   6. Exercise_collateral: SELECT FROM WHERE, UPDATE SET WHERE를 사용하여 담보권 행사.
+     
 - Update_query.py
   1. Saving_interest_add: SELECT FROM WHERE, UPDATE SET WHERE, INSERT INTO를 사용하여 보통예금 계좌에 이자를 정산.
-  2. 
+  2. Time_deposit_maturity: SELECT FROM WHERE, UPDATE SET WHERE, INSERT INTO를 사용하여 정기예금 계좌의 만기 이자를 정산.
+  3. Installment_maturity: SELECT FROM WHERE, UPDATE SET WHERE, INSERT INTO를 사용하여 적금 계좌의 만기 이자를 정산.
+  4. Auto_create_card_bill: SELECT FROM WHERE, INSERT INTO를 사용하여 해당 날짜의 카드 사용 내역 청구서를 생성.
+  5. Loan_overdue_check: SELECT FROM JOIN ON WHERE, UPDATE SET WHERE를 사용하여 대출 연체 여부를 갱신.
+  6. Card_overdue_check: SELECT FROM JOIN ON WHERE, UPDATE SET WHERE를 사용하여 카드 연체 여부를 갱신.
+
+---
+# 4. 결과 및 후기
+- 구현한 모든 기능이 동작하는 것을 확인하고 제출함.
+  - ex) 계좌 개설/해지
+    
+    <img width="400" height="500" alt="image" src="https://github.com/user-attachments/assets/72ea39ea-f64c-47eb-a32f-69a989e1ab9e" />
+    <img width="400" height="500" alt="image" src="https://github.com/user-attachments/assets/af808119-678b-47ae-9373-285ca10ffa08" />
+
+- 하지만 구현한 기능이 다소 많아 기능들의 복합적인 상호작용에 대한 모든 케이스를 테스트해보지 못했다는 것은 아쉬움.
+  - 시간 분배를 생각해서 기능을 조금 줄이고 무결성에 더 시간을 썼으면 좋았을 것 같다.
+  - 특히 대출/담보 같은 경우 배경지식도 부족했고 이 프로그램에 넣기엔 살짝 과한 느낌이 든다.
+  - 실제 DBMS는 굉장히 많은 노력과 시간을 디버깅/QA에 투자해야 할 것이라는 생각이 듬.
+ 
+- 그래도 SQL을 활용해서 작동하는 프로그램을 만드는 것은 재밌어서 시간 가는 줄 모르고 했던 것 같다. 덤으로 은행 업무에 대한 배경지식도 쌓을 수 있는 유익한 시간이었다.
